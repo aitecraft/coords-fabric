@@ -29,7 +29,7 @@ public class Coord implements Serializable
         this.yValue = player_pos.getY();
         this.zValue = player_pos.getZ();
         this.saveName = player.getDisplayName().asString();
-        this.dimension = player.getEntityWorld().getDimensionRegistryKey().getValue().toString();
+        this.dimension = player.getServerWorld().getRegistryKey().getValue().toString();
     }
 
     public Coord(ServerPlayerEntity player, String CoordName) {
@@ -90,7 +90,7 @@ public class Coord implements Serializable
         if (action == TextAction.GET)
         {
             message.setStyle(
-                message.getStyle().setHoverEvent(
+                message.getStyle().withHoverEvent(
                     new HoverEvent(
                         HoverEvent.Action.SHOW_TEXT,
                         new LiteralText("Show in public chat")
@@ -103,7 +103,7 @@ public class Coord implements Serializable
         else if (action == TextAction.DELETE)
         {
             message.setStyle(
-                message.getStyle().setHoverEvent(
+                message.getStyle().withHoverEvent(
                     new HoverEvent(
                         HoverEvent.Action.SHOW_TEXT,
                         new LiteralText("Delete").formatted(Formatting.RED)
