@@ -17,11 +17,24 @@ You can also get coordinates of a specific player with `/cc <Player Name>`.
 ### Saving Coordinates
 
 - Save Coordinates using the `/ccs <Save Name>` command.
+
+### Accessing saved Coordinates
+
 - To see a list of saved coordinates, use `/ccl`.
     - You can also use `/ccl <Search Term>` to search for a specfic coordinate.
 
-### Deleting saved coordinates
+- Clicking on any name in the list will display the coord in full and bring up 3 options.
+    - `[GET]`
+        - Click on this to display the coord in chat for everyone.
+    - `[DEL]`
+        - Click on this to delete the coord.
+    - `[REN]`
+        - Click on this to rename the coord.
+        - You'll need to specify the new name.
+        - After you press enter, the coord will be renamed.
 
-- To delete saved coordinates, use `/ccd`. It works similarly to `/ccl`.
-- Click on a specific coordinate in the list to delete it.
-- There are no warning dialogs, so be careful.
+### Future Plans
+
+- `/ccsc` or similar to allow user to save coord without being in the spot.
+    - `/ccsc 58 75 -19 minecraft:overworld Main Base` - Expected syntax.
+- Add a `[DIS]` option to display the coord above the hotbar.

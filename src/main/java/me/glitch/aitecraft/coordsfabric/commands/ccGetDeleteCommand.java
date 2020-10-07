@@ -14,13 +14,14 @@ import me.glitch.aitecraft.coordsfabric.util.CommonText;
 
 public final class ccGetDeleteCommand {
     private ArrayList<Coord> coordsList;
+    public final static String command = "cc-get-delete";
 
     public ccGetDeleteCommand(ArrayList<Coord> coordsList) {
         this.coordsList = coordsList;
     }
 
     public void register(CommandDispatcher<ServerCommandSource> dispatcher, Boolean dedicated) {
-        dispatcher.register(CommandManager.literal("cc-get-delete")
+        dispatcher.register(CommandManager.literal(command)
         .then(CommandManager.argument("Coord UUID", UuidArgumentType.uuid())
             .executes(this::executeCoordUUIDArg))
         );

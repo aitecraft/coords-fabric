@@ -12,8 +12,10 @@ import me.glitch.aitecraft.coordsfabric.coord.Coord;
 
 public final class ccCommand {
 
+    public final static String command = "cc";
+
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, Boolean dedicated) {
-        dispatcher.register(CommandManager.literal("cc")
+        dispatcher.register(CommandManager.literal(command)
         .then(CommandManager.argument("Player Name", EntityArgumentType.player())
             .executes(ccCommand::executePlayerArg))
         .executes(ccCommand::executeNoArgs));

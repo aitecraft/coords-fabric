@@ -3,12 +3,15 @@ package me.glitch.aitecraft.coordsfabric.coord;
 import java.io.Serializable;
 import java.util.UUID;
 
+import net.minecraft.network.MessageType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.ClickEvent.Action;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 
 // This is the custom data type used for every single set of coordinates.
@@ -69,60 +72,143 @@ public class Coord implements Serializable
         commandSource.getServer().getPlayerManager().broadcastChatMessage(this.toText(), MessageType.CHAT ,Util.NIL_UUID);
         commandSource.getServer().getPlayerManager().sendToAll(new GameMessageS2CPacket(this.toText(), MessageType.CHAT, Util.NIL_UUID));
 
+        // This does show up in Fabric Discord but does not for players that aren't operators.
+        commandSource.getCommandSource().sendFeedback(this.toText(), true); 
         */
-        commandSource.getCommandSource().sendFeedback(this.toText(), true);
-    }
-    
-    public enum TextAction {
-        NONE,
-        GET,
-        DELETE
+        commandSource.getServer().getPlayerManager().broadcastChatMessage(this.toText(), MessageType.CHAT, Util.NIL_UUID);
     }
 
-    public MutableText toText(TextAction action) {
-        MutableText message = (new LiteralText(this.saveName)).formatted(Formatting.WHITE);
-        message.append(new LiteralText(":").formatted(Formatting.WHITE));
-        message.append(new LiteralText("  X = " + this.xValue).formatted(Formatting.RED));
-        message.append(new LiteralText("  Y = " + this.yValue).formatted(Formatting.GREEN));
-        message.append(new LiteralText("  Z = " + this.zValue).formatted(Formatting.BLUE));
-        message.append(new LiteralText(" [" + this.dimension + "]").formatted(Formatting.WHITE));
+    public MutableText toShortText() {
+        MutableText message = getTextSaveName().formatted(Formatting.YELLOW);
 
-        if (action == TextAction.GET)
-        {
-            message.setStyle(
-                message.getStyle().withHoverEvent(
-                    new HoverEvent(
-                        HoverEvent.Action.SHOW_TEXT,
-                        new LiteralText("Show in public chat")
-                    )
-                ).withClickEvent(
-                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/cc-get " + this.uuid)
+        MutableText hover_text = getTextX("", "\n");
+        hover_text.append(getTextY("", "\n"));
+        hover_text.append(getTextZ("", "\n"));
+        hover_text.append(getTextDimension());
+
+        message.setStyle(
+            message.getStyle().withHoverEvent(
+                new HoverEvent(
+                    HoverEvent.Action.SHOW_TEXT,
+                    hover_text
                 )
-            );
-        } 
-        else if (action == TextAction.DELETE)
-        {
-            message.setStyle(
-                message.getStyle().withHoverEvent(
-                    new HoverEvent(
-                        HoverEvent.Action.SHOW_TEXT,
-                        new LiteralText("Delete").formatted(Formatting.RED)
-                    )
-                ).withClickEvent(
-                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/cc-get-delete " + this.uuid)
+            ).withClickEvent(
+                new ClickEvent(
+                    Action.RUN_COMMAND,
+                    "/cc-get-options " + this.uuid
                 )
-            );
-        }
+            )
+        );
+
+        return message;
+    }
+
+    private MutableText createOptionText(String button, String description, String command, boolean suggest) {
+        MutableText optionText = new LiteralText("["+ button +"]");
+        optionText.setStyle(
+            optionText.getStyle().withHoverEvent(
+                new HoverEvent(
+                    HoverEvent.Action.SHOW_TEXT,
+                    new LiteralText(description)
+                )
+            ).withClickEvent(
+                new ClickEvent(
+                    suggest ? ClickEvent.Action.SUGGEST_COMMAND : ClickEvent.Action.RUN_COMMAND,
+                    command + " " + this.uuid + (suggest ? " " : "")
+                )
+            )
+        );
+        optionText.formatted(Formatting.YELLOW);
+        return optionText;
+    }
+
+    public MutableText toTextWithOptions() {
+        MutableText message = this.toText();
+        message.append("\n");
+
+        MutableText options = new LiteralText("");
+        options.append(createOptionText("GET", "Show in public chat", "/cc-get", false));
+        options.append(" ");
+        options.append(createOptionText("DEL", "Delete", "/cc-get-delete", false));
+        options.append(" ");
+        options.append(createOptionText("REN", "Rename", "/cc-get-rename", true));
+        
+        //options.append(" ");
+        //options.append(createOptionText("DIS", "Display above hotbar", "/cc-get-display", false));
+
+        message.append(options);
 
         return message;
     }
 
     public MutableText toText() {
-        return toText(TextAction.NONE);
+        MutableText message = getTextSaveName();
+        message.append(new LiteralText(":").formatted(Formatting.WHITE));
+        message.append(getTextX("  ", ""));
+        message.append(getTextY("  ", ""));
+        message.append(getTextZ("  ", ""));
+        message.append(getTextDimension(" [", "]"));
+        return message;
     }
 
-    public boolean saveNameContains(String term) {
-        return this.saveName.toLowerCase().contains(term.toLowerCase());
+    private MutableText getTextSaveName(String pre, String post) {
+        return new LiteralText(pre + this.saveName + post).formatted(Formatting.WHITE);
+    }
+
+    private MutableText getTextSaveName() {
+        return getTextSaveName("", "");
+    }
+
+    private MutableText getTextX(String pre, String post) {
+        return new LiteralText(pre + "X = " + this.xValue + post).formatted(Formatting.RED);
+    }
+
+    private MutableText getTextX() {
+        return getTextX("", "");
+    }
+
+    private MutableText getTextY(String pre, String post) {
+        return new LiteralText(pre + "Y = " + this.yValue + post).formatted(Formatting.GREEN);
+    }
+
+    private MutableText getTextY() {
+        return getTextY("", "");
+    }
+
+    private MutableText getTextZ(String pre, String post) {
+        return new LiteralText(pre + "Z = " + this.zValue + post).formatted(Formatting.BLUE);
+    }
+
+    private MutableText getTextZ() {
+        return getTextZ("", "");
+    }
+
+    private MutableText getTextDimension(String pre, String post) {
+        return new LiteralText(pre + this.dimension + post).formatted(Formatting.WHITE);
+    }
+
+    private MutableText getTextDimension() {
+        return getTextDimension("", "");
+    }
+
+    public boolean dataContains(String term) {
+        boolean match = false;
+
+        for(String t : term.split(" ")) {
+            match = true;
+            for (String s : t.split("\\+")) {
+                match = (match && (hasTerm(s)));
+            }
+        }
+
+        return match;
+    }
+
+    private boolean hasTerm(String term) {
+        return 
+            this.saveName.toLowerCase().contains(term.toLowerCase()) ||
+            this.dimension.toLowerCase().contains(term.toLowerCase())        
+        ;
     }
 
     public UUID getUUID() {
@@ -139,6 +225,14 @@ public class Coord implements Serializable
         messageToTargetPlayer.append(new LiteralText(" has seen your coordinates.").formatted(Formatting.GRAY));
 
         targetPlayer.sendSystemMessage(messageToTargetPlayer, commandSource.getUuid());
+    }
+
+    public void rename(String newName) {
+        this.saveName = newName;
+    }
+
+    public String getName() {
+        return this.saveName;
     }
 
 }

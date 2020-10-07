@@ -16,13 +16,14 @@ import me.glitch.aitecraft.coordsfabric.coord.Coord;
 public final class ccsCommand {
 
     private ArrayList<Coord> coordsList;
+    public static final String command = "ccs";
 
     public ccsCommand(ArrayList<Coord> coordsList) {
         this.coordsList = coordsList;
     }
 
     public void register(CommandDispatcher<ServerCommandSource> dispatcher, Boolean dedicated) {
-        dispatcher.register(CommandManager.literal("ccs")
+        dispatcher.register(CommandManager.literal(command)
         .then(CommandManager.argument("Save Name", StringArgumentType.greedyString())
             .executes(this::executeSaveNameArg))
         );

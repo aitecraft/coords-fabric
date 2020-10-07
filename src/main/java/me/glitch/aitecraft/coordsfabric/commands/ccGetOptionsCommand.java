@@ -9,15 +9,14 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.argument.UuidArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
 import me.glitch.aitecraft.coordsfabric.coord.Coord;
 import me.glitch.aitecraft.coordsfabric.util.CommonText;
 
-public final class ccGetCommand {
+public final class ccGetOptionsCommand {
     private ArrayList<Coord> coordsList;
-    public final static String command = "cc-get";
+    public final static String command = "cc-get-options";
 
-    public ccGetCommand(ArrayList<Coord> coordsList) {
+    public ccGetOptionsCommand(ArrayList<Coord> coordsList) {
         this.coordsList = coordsList;
     }
 
@@ -29,14 +28,13 @@ public final class ccGetCommand {
     }
 
     private int executeCoordUUIDArg(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        ServerPlayerEntity commandSource = context.getSource().getPlayer();
         UUID uuidArg = UuidArgumentType.getUuid(context, "Coord UUID");
 
         boolean found = false;
         
         for (Coord coord : coordsList) {
             if (coord.getUUID().equals(uuidArg)) {
-                coord.broadcastToChat(commandSource);
+                context.getSource().sendFeedback(coord.toTextWithOptions(), false);
                 found = true;
                 break;
             }
