@@ -78,7 +78,7 @@ public class Coord implements Serializable
         commandSource.getServer().getPlayerManager().broadcastChatMessage(this.toText(), MessageType.CHAT, Util.NIL_UUID);
     }
 
-    public MutableText toShortText() {
+    public MutableText toListText() {
         MutableText message = getTextSaveName().formatted(Formatting.YELLOW);
 
         MutableText hover_text = getTextX("", "\n");
@@ -100,6 +100,13 @@ public class Coord implements Serializable
             )
         );
 
+        return message;
+    }
+
+    public MutableText toDisplayText() {
+        MutableText message = getTextX("", " ").formatted(Formatting.WHITE);
+        message.append(getTextY("", " ").formatted(Formatting.WHITE));
+        message.append(getTextZ().formatted(Formatting.WHITE));
         return message;
     }
 
@@ -133,8 +140,8 @@ public class Coord implements Serializable
         options.append(" ");
         options.append(createOptionText("REN", "Rename", "/cc-get-rename", true));
         
-        //options.append(" ");
-        //options.append(createOptionText("DIS", "Display above hotbar", "/cc-get-display", false));
+        options.append(" ");
+        options.append(createOptionText("DIS", "Display above hotbar", "/cc-get-display", false));
 
         message.append(options);
 

@@ -38,7 +38,7 @@ public final class cclCommand {
         context.getSource().sendFeedback(CommonText.separator, false);
         
         for (int i = this.coordsList.size() - 1; i >= 0; i--) {
-            context.getSource().sendFeedback(this.coordsList.get(i).toShortText(), false);
+            context.getSource().sendFeedback(this.coordsList.get(i).toListText(), false);
         }
 
         context.getSource().sendFeedback(CommonText.separator, false);
@@ -63,7 +63,7 @@ public final class cclCommand {
                 }
 
                 found = true;
-                context.getSource().sendFeedback(this.coordsList.get(i).toShortText(), false);
+                context.getSource().sendFeedback(this.coordsList.get(i).toListText(), false);
             }
         }
 

@@ -18,7 +18,7 @@ You can also get coordinates of a specific player with `/cc <Player Name>`.
 
 - Save Coordinates using the `/ccs <Save Name>` command.
 
-### Accessing saved Coordinates
+### Accessing Saved Coordinates
 
 - To see a list of saved coordinates, use `/ccl`.
     - You can also use `/ccl <Search Term>` to search for a specfic coordinate.
@@ -32,9 +32,11 @@ You can also get coordinates of a specific player with `/cc <Player Name>`.
         - Click on this to rename the coord.
         - You'll need to specify the new name.
         - After you press enter, the coord will be renamed.
+    - `[DIS]`
+        - Click on this to display the coord above your hotbar.
+        - Use `/cc-display-clear` to remove the display.
 
 ### Future Plans
 
 - `/ccsc` or similar to allow user to save coord without being in the spot.
     - `/ccsc 58 75 -19 minecraft:overworld Main Base` - Expected syntax.
-- Add a `[DIS]` option to display the coord above the hotbar.
