@@ -17,6 +17,8 @@ You can also get coordinates of a specific player with `/cc <Player Name>`.
 ### Saving Coordinates
 
 - Save Coordinates using the `/ccs <Save Name>` command.
+- Or use the `/ccsc` command to save coordinates without being in the spot.
+    - Example - `/ccsc 58 75 -19 minecraft:overworld Main Base`
 
 ### Accessing Saved Coordinates
 
@@ -35,8 +37,10 @@ You can also get coordinates of a specific player with `/cc <Player Name>`.
     - `[DIS]`
         - Click on this to display the coord above your hotbar.
         - Use `/cc-display-clear` to remove the display.
+    - `[CPY]`
+        - Click on this to copy the coord into your clipboard.
+        - Copied string example - `/execute in minecraft:overworld run tp @s 10 23 53`
 
 ### Future Plans
 
-- `/ccsc` or similar to allow user to save coord without being in the spot.
-    - `/ccsc 58 75 -19 minecraft:overworld Main Base` - Expected syntax.
+- None currently... Leave a suggestion through the issues tab if you have any!

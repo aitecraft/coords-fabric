@@ -41,6 +41,16 @@ public class Coord implements Serializable
         this.uuid = UUID.randomUUID();
     }
 
+    public Coord(BlockPos position, String dimension, String CoordName) {
+        this.xValue = position.getX();
+        this.yValue = position.getY();
+        this.zValue = position.getZ();
+        this.dimension = dimension;
+        
+        this.saveName = CoordName;
+        this.uuid = UUID.randomUUID();
+    }
+
     public void sendToSpecificPlayer(ServerPlayerEntity commandSource, ServerPlayerEntity targetPlayer) {
         commandSource.sendSystemMessage(this.toText(), targetPlayer.getUuid());
         
@@ -129,6 +139,29 @@ public class Coord implements Serializable
         return optionText;
     }
 
+    private MutableText createCopyCoordOptionText(String button, String desc) {
+        MutableText optionText = new LiteralText("["+ button +"]");
+        optionText.setStyle(
+            optionText.getStyle().withHoverEvent(
+                new HoverEvent(
+                    HoverEvent.Action.SHOW_TEXT,
+                    new LiteralText(desc)
+                )
+            ).withClickEvent(
+                new ClickEvent(
+                    ClickEvent.Action.COPY_TO_CLIPBOARD,
+                    "/execute in " 
+                        + this.dimension + " run tp @s " 
+                        + this.xValue + " "
+                        + this.yValue + " "
+                        + this.zValue
+                )
+            )
+        );
+        optionText.formatted(Formatting.YELLOW);
+        return optionText;
+    }
+
     public MutableText toTextWithOptions() {
         MutableText message = this.toText();
         message.append("\n");
@@ -139,10 +172,10 @@ public class Coord implements Serializable
         options.append(createOptionText("DEL", "Delete", "/cc-get-delete", false));
         options.append(" ");
         options.append(createOptionText("REN", "Rename", "/cc-get-rename", true));
-        
         options.append(" ");
         options.append(createOptionText("DIS", "Display above hotbar", "/cc-get-display", false));
-
+        options.append(" ");
+        options.append(createCopyCoordOptionText("CPY", "Copy to clipboard"));
         message.append(options);
 
         return message;
