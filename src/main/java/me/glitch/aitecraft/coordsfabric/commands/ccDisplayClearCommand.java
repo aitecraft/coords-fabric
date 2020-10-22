@@ -1,8 +1,8 @@
 package me.glitch.aitecraft.coordsfabric.commands;
 
 import java.util.HashMap;
-import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.ScheduledFuture;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
@@ -11,10 +11,10 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 
 public final class ccDisplayClearCommand {
-    private HashMap<UUID, TimerTask> tasks;
+    private HashMap<UUID, ScheduledFuture<?>> tasks;
     public final static String command = "cc-display-clear";
 
-    public ccDisplayClearCommand(HashMap<UUID, TimerTask> tasks) {
+    public ccDisplayClearCommand(HashMap<UUID, ScheduledFuture<?>> tasks) {
         this.tasks = tasks;
     }
 
@@ -28,7 +28,7 @@ public final class ccDisplayClearCommand {
         UUID playerUuid = context.getSource().getPlayer().getUuid();
         
         if (tasks.containsKey(playerUuid)) {
-            tasks.get(playerUuid).cancel();
+            tasks.get(playerUuid).cancel(false);
         }
 
         // Return a result. -1 is failure, 0 is a pass and 1 is success.

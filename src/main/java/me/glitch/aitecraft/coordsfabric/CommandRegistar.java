@@ -2,15 +2,14 @@ package me.glitch.aitecraft.coordsfabric;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.ScheduledFuture;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import me.glitch.aitecraft.coordsfabric.commands.*;
 import me.glitch.aitecraft.coordsfabric.coord.Coord;
-
+import me.glitch.aitecraft.coordsfabric.util.SchedulerWrapper;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
 public class CommandRegistar implements ModInitializer {
@@ -21,8 +20,8 @@ public class CommandRegistar implements ModInitializer {
         CommandRegistrationCallback.EVENT.register(ccCommand::register);
 
         ArrayList<Coord> coordsList = new ArrayList<Coord>();
-        Timer timer = new Timer();
-        HashMap<UUID, TimerTask> tasks = new HashMap<UUID, TimerTask>();
+        HashMap<UUID, ScheduledFuture<?>> tasks = new HashMap<UUID, ScheduledFuture<?>>();
+        SchedulerWrapper wrapper = new SchedulerWrapper();
 
         ccsCommand ccs_Command = new ccsCommand(coordsList);
         ccscCommand ccsc_Command = new ccscCommand(coordsList);
@@ -31,7 +30,7 @@ public class CommandRegistar implements ModInitializer {
         ccGetDeleteCommand cc_Get_Delete_Command = new ccGetDeleteCommand(coordsList);
         ccGetRenameCommand cc_Get_Rename_Command = new ccGetRenameCommand(coordsList);
         ccGetOptionsCommand cc_Get_Options_Command = new ccGetOptionsCommand(coordsList);
-        ccGetDisplayCommand cc_Get_Display_Command = new ccGetDisplayCommand(coordsList, timer, tasks);
+        ccGetDisplayCommand cc_Get_Display_Command = new ccGetDisplayCommand(coordsList, wrapper, tasks);
         ccDisplayClearCommand cc_Display_Clear_Command = new ccDisplayClearCommand(tasks);
 
         CommandRegistrationCallback.EVENT.register(ccs_Command::register);
@@ -45,10 +44,11 @@ public class CommandRegistar implements ModInitializer {
         CommandRegistrationCallback.EVENT.register(cc_Display_Clear_Command::register);
 
         CoordsFileManager file_manager = new CoordsFileManager(coordsList);
-        TaskCleanup taskCleanup = new TaskCleanup(tasks);
+        TaskCleanup taskCleanup = new TaskCleanup(wrapper);
 
         ServerLifecycleEvents.SERVER_STARTED.register(file_manager);
         ServerLifecycleEvents.SERVER_STOPPING.register(file_manager);
+        ServerLifecycleEvents.SERVER_STARTED.register(taskCleanup);
         ServerLifecycleEvents.SERVER_STOPPING.register(taskCleanup);
     }
 }

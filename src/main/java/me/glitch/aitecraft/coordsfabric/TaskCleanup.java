@@ -1,23 +1,25 @@
 package me.glitch.aitecraft.coordsfabric;
 
-import java.util.HashMap;
-import java.util.TimerTask;
-import java.util.UUID;
-
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.ServerStarted;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.ServerStopping;
 import net.minecraft.server.MinecraftServer;
 
-public final class TaskCleanup implements ServerStopping {
+import me.glitch.aitecraft.coordsfabric.util.SchedulerWrapper;
+
+public final class TaskCleanup implements ServerStopping, ServerStarted {
     @Override
     public void onServerStopping(MinecraftServer server) {
-        for(TimerTask task : tasks.values()) {
-            task.cancel();
-        }
+        wrapper.stopScheduler();
     }
 
-    HashMap<UUID, TimerTask> tasks;
+    @Override
+    public void onServerStarted(MinecraftServer server) {
+        wrapper.createScheduler();
+    }
+    
+    private SchedulerWrapper wrapper;
 
-    public TaskCleanup(HashMap<UUID, TimerTask> tasks) {
-        this.tasks = tasks;
+    public TaskCleanup(SchedulerWrapper wrapper) {
+        this.wrapper = wrapper;
     }
 }

@@ -2,9 +2,9 @@ package me.glitch.aitecraft.coordsfabric.commands;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
@@ -16,16 +16,17 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import me.glitch.aitecraft.coordsfabric.coord.Coord;
 import me.glitch.aitecraft.coordsfabric.util.CommonText;
+import me.glitch.aitecraft.coordsfabric.util.SchedulerWrapper;
 
 public final class ccGetDisplayCommand {
     private ArrayList<Coord> coordsList;
-    private Timer timer;
-    private HashMap<UUID, TimerTask> tasks;
+    private SchedulerWrapper wrapper;
+    private HashMap<UUID, ScheduledFuture<?>> tasks;
     public final static String command = "cc-get-display";
 
-    public ccGetDisplayCommand(ArrayList<Coord> coordsList, Timer timer, HashMap<UUID, TimerTask> tasks) {
+    public ccGetDisplayCommand(ArrayList<Coord> coordsList, SchedulerWrapper wrapper, HashMap<UUID, ScheduledFuture<?>> tasks) {
         this.coordsList = coordsList;
-        this.timer = timer;
+        this.wrapper = wrapper;
         this.tasks = tasks;
     }
 
@@ -62,17 +63,17 @@ public final class ccGetDisplayCommand {
         MutableText message = coord.toDisplayText();
         
         if (tasks.containsKey(player.getUuid())) {
-            tasks.get(player.getUuid()).cancel();
+            tasks.get(player.getUuid()).cancel(false);
         }
         
-        TimerTask task = new TimerTask(){
+        Runnable task = new Runnable(){
             @Override
             public void run() {
                 player.sendMessage(message, true);
             }
         };
 
-        tasks.put(player.getUuid(), task);
-        timer.scheduleAtFixedRate(task, 0, 2000);
+        ScheduledFuture<?> taskFuture = wrapper.scheduler.scheduleAtFixedRate(task, 0, 2, TimeUnit.SECONDS);
+        tasks.put(player.getUuid(), taskFuture);
     }
 }
