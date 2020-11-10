@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "coords_fabric",
-  "version": "2.3.1",
+  "version": "2.3.2",
 
   "name": "Coords",
   "description": "Share 'em coords!",
@@ -21,6 +21,9 @@
   "entrypoints": {
     "main": [
       "me.glitch.aitecraft.coordsfabric.CommandRegistar"
+    ],
+    "server": [
+      "me.glitch.aitecraft.coordsfabric.util.FabricDiscordHelper"
     ]
   },
   "depends": {
@@ -29,6 +32,6 @@
     "minecraft": ">=1.14"
   },
   "suggests": {
-    "flamingo": "*"
+    "fdlink_common": "*"
   }
 }

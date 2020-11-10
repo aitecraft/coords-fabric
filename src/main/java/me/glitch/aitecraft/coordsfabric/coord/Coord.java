@@ -14,6 +14,8 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 
+import me.glitch.aitecraft.coordsfabric.util.FabricDiscordHelper;
+
 // This is the custom data type used for every single set of coordinates.
 public class Coord implements Serializable
 {
@@ -86,6 +88,7 @@ public class Coord implements Serializable
         commandSource.getCommandSource().sendFeedback(this.toText(), true); 
         */
         commandSource.getServer().getPlayerManager().broadcastChatMessage(this.toText(), MessageType.CHAT, Util.NIL_UUID);
+        FabricDiscordHelper.sendMessage(this.toText());
     }
 
     public MutableText toListText() {
