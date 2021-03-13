@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.4-SNAPSHOT'
+	id 'fabric-loom' version '0.6-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -15,6 +15,14 @@ minecraft {
 
 repositories {
     maven { url 'https://jitpack.io' }
+
+	maven {
+		name = "CurseMaven"
+		url = "https://www.cursemaven.com"
+		content {
+			includeGroup "curse.maven"
+		}
+	}
 }
 
 dependencies {
@@ -28,7 +36,7 @@ dependencies {
 
 	// Fabric---Discord Link
 	modCompile "com.github.arthurbambou.Fabric---Discord-Link:common:-SNAPSHOT"
-	modImplementation "com.github.arthurbambou.Fabric---Discord-Link:1.16.4:-SNAPSHOT"
+	modImplementation "com.github.arthurbambou.Fabric---Discord-Link:1.16.5:-SNAPSHOT"
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.

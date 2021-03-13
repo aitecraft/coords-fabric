@@ -31,6 +31,6 @@ public final class FabricDiscordManager {
         }
     
         CompatText msg = new CompatText(message);
-        FDLink.getDiscordBot().sendMessage(msg);
+        FDLink.getMessageSender().sendMessage(msg);
     }
 }
