@@ -35,6 +35,12 @@ public final class FabricDiscordHelper implements DedicatedServerModInitializer 
             return;
         }
 
-        FabricDiscordManager.sendMessage(message);
+        try {
+            FabricDiscordManager.sendMessage(message);
+        } catch (NoSuchMethodError ex) {
+            System.out.println("[Coords] [ERROR] You are using an unsupported Fabric-Discord Link version. Please upgrade/downgrade the Fabric-Discord Link version and restart the server. Coords will now stop sending messages via Fabric-Discord Link until you restart the server.");
+            status = FDLinkStatus.NOT_AVAILABLE;
+        }
+
     }    
 }

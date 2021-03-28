@@ -25,7 +25,7 @@ You can also get coordinates of a specific player with `/cc <Player Name>`.
 - To see a list of saved coordinates, use `/ccl`.
     - You can also use `/ccl <Search Term>` to search for a specfic coordinate.
 
-- Clicking on any name in the list will display the coord in full and bring up 3 options.
+- Clicking on any name in the list will display the coord in full and bring up 5 options.
     - `[GET]`
         - Click on this to display the coord in chat for everyone.
     - `[DEL]`

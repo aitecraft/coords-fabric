@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "coords_fabric",
-  "version": "2.3.3",
+  "version": "2.3.4",
 
   "name": "Coords",
   "description": "Share 'em coords!",

@@ -35,8 +35,8 @@ dependencies {
 	//modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// Fabric---Discord Link
-	modCompile "com.github.arthurbambou.Fabric---Discord-Link:common:-SNAPSHOT"
-	modImplementation "com.github.arthurbambou.Fabric---Discord-Link:1.16.5:-SNAPSHOT"
+	modCompile "com.github.arthurbambou.Fabric---Discord-Link:common:57bc78e0e1"
+	modImplementation "com.github.arthurbambou.Fabric---Discord-Link:1.16.5:57bc78e0e1"
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
