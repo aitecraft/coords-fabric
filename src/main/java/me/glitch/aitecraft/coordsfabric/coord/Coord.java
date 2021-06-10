@@ -64,29 +64,6 @@ public class Coord implements Serializable
     
     // Broadcast to chat
     public void broadcastToChat(ServerPlayerEntity commandSource) {
-        
-        /*
-        // This never gets shown in client chat.
-        commandSource.getServer().sendSystemMessage(
-            this.toText(), commandSource.getUuid()
-        );
-
-        // This gets shown in both server and client chat, but not in Fabric-discord
-        commandSource.getServer().getPlayerManager().broadcastChatMessage(this.toText(), MessageType.CHAT ,commandSource.getUuid());
-
-        // This only gets shown in client chat
-        commandSource.getServer().getPlayerManager().sendToAll(new GameMessageS2CPacket(this.toText(), MessageType.CHAT, commandSource.getUuid()));
-
-        // Same behaviour as above. May want to use this for better perf?
-        commandSource.getServer().sendSystemMessage(
-            this.toText(), Util.NIL_UUID
-        );
-        commandSource.getServer().getPlayerManager().broadcastChatMessage(this.toText(), MessageType.CHAT ,Util.NIL_UUID);
-        commandSource.getServer().getPlayerManager().sendToAll(new GameMessageS2CPacket(this.toText(), MessageType.CHAT, Util.NIL_UUID));
-
-        // This does show up in Fabric Discord but does not for players that aren't operators.
-        commandSource.getCommandSource().sendFeedback(this.toText(), true); 
-        */
         commandSource.getServer().getPlayerManager().broadcastChatMessage(this.toText(), MessageType.CHAT, Util.NIL_UUID);
         FabricDiscordHelper.sendMessage(this.toText());
     }
