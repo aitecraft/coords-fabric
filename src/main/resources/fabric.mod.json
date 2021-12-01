@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "id": "coords_fabric",
-  "version": "2.3.4",
+  "version": "2.3.6",
 
   "name": "Coords",
   "description": "Share 'em coords!",
   "authors": [
     "kripesh101",
-    "a___p___o___"
+    "eght"
   ],
   "contact": {
     "homepage": "https://aitecraft.glitch.me/",
@@ -29,7 +29,7 @@
   "depends": {
     "fabricloader": ">=0.4.0",
     "fabric": "*",
-    "minecraft": ">=1.14"
+    "minecraft": ">=1.18"
   },
   "suggests": {
     "fdlink_common": "*"

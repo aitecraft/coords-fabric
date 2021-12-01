@@ -34,7 +34,7 @@ public class Coord implements Serializable
         this.yValue = player_pos.getY();
         this.zValue = player_pos.getZ();
         this.saveName = player.getDisplayName().asString();
-        this.dimension = player.getServerWorld().getRegistryKey().getValue().toString();
+        this.dimension = player.getWorld().getRegistryKey().getValue().toString();
     }
 
     public Coord(ServerPlayerEntity player, String CoordName) {
@@ -64,7 +64,7 @@ public class Coord implements Serializable
     
     // Broadcast to chat
     public void broadcastToChat(ServerPlayerEntity commandSource) {
-        commandSource.getServer().getPlayerManager().broadcastChatMessage(this.toText(), MessageType.CHAT, Util.NIL_UUID);
+        commandSource.getServer().getPlayerManager().broadcast(this.toText(), MessageType.CHAT, Util.NIL_UUID);
         FabricDiscordHelper.sendMessage(this.toText());
     }
 
