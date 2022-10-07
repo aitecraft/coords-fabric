@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "coords_fabric",
-  "version": "2.3.6",
+  "version": "2.3.7",
 
   "name": "Coords",
   "description": "Share 'em coords!",
@@ -29,7 +29,7 @@
   "depends": {
     "fabricloader": ">=0.4.0",
     "fabric": "*",
-    "minecraft": ">=1.18"
+    "minecraft": ">=1.19"
   },
   "suggests": {
     "fdlink_common": "*"

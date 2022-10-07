@@ -34,7 +34,7 @@ public final class ccscCommand {
     }
 
     private int execute(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        ServerPlayerEntity commandSource = context.getSource().getPlayer();
+        ServerPlayerEntity commandSource = context.getSource().getPlayerOrThrow();
         
         BlockPos position = BlockPosArgumentType.getBlockPos(context, "Position");
         String dimension = DimensionArgumentType.getDimensionArgument(context, "Dimension").getRegistryKey().getValue().toString();

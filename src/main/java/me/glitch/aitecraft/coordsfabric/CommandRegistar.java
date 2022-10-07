@@ -6,18 +6,20 @@ import java.util.UUID;
 import java.util.concurrent.ScheduledFuture;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import me.glitch.aitecraft.coordsfabric.commands.*;
 import me.glitch.aitecraft.coordsfabric.coord.Coord;
 import me.glitch.aitecraft.coordsfabric.util.SchedulerWrapper;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
+import com.mojang.brigadier.CommandDispatcher;
+import net.minecraft.server.command.ServerCommandSource;
+
 public class CommandRegistar implements ModInitializer {
 
     @Override
-    public void onInitialize()
-    {
-        CommandRegistrationCallback.EVENT.register(ccCommand::register);
+    public void onInitialize() {
+        register(ccCommand::register);
 
         ArrayList<Coord> coordsList = new ArrayList<Coord>();
         HashMap<UUID, ScheduledFuture<?>> tasks = new HashMap<UUID, ScheduledFuture<?>>();
@@ -33,15 +35,15 @@ public class CommandRegistar implements ModInitializer {
         ccGetDisplayCommand cc_Get_Display_Command = new ccGetDisplayCommand(coordsList, wrapper, tasks);
         ccDisplayClearCommand cc_Display_Clear_Command = new ccDisplayClearCommand(tasks);
 
-        CommandRegistrationCallback.EVENT.register(ccs_Command::register);
-        CommandRegistrationCallback.EVENT.register(ccsc_Command::register);
-        CommandRegistrationCallback.EVENT.register(ccl_Command::register);
-        CommandRegistrationCallback.EVENT.register(cc_Get_Command::register);
-        CommandRegistrationCallback.EVENT.register(cc_Get_Delete_Command::register);
-        CommandRegistrationCallback.EVENT.register(cc_Get_Rename_Command::register);
-        CommandRegistrationCallback.EVENT.register(cc_Get_Options_Command::register);
-        CommandRegistrationCallback.EVENT.register(cc_Get_Display_Command::register);
-        CommandRegistrationCallback.EVENT.register(cc_Display_Clear_Command::register);
+        register(ccs_Command::register);
+        register(ccsc_Command::register);
+        register(ccl_Command::register);
+        register(cc_Get_Command::register);
+        register(cc_Get_Delete_Command::register);
+        register(cc_Get_Rename_Command::register);
+        register(cc_Get_Options_Command::register);
+        register(cc_Get_Display_Command::register);
+        register(cc_Display_Clear_Command::register);
 
         CoordsFileManager file_manager = new CoordsFileManager(coordsList);
         TaskCleanup taskCleanup = new TaskCleanup(wrapper);
@@ -50,5 +52,15 @@ public class CommandRegistar implements ModInitializer {
         ServerLifecycleEvents.SERVER_STOPPING.register(file_manager);
         ServerLifecycleEvents.SERVER_STARTED.register(taskCleanup);
         ServerLifecycleEvents.SERVER_STOPPING.register(taskCleanup);
+    }
+
+    public interface OldCallback {
+        void register(CommandDispatcher<ServerCommandSource> dispatcher, Boolean dedicated);
+    }
+
+    public static final void register(OldCallback callback) {
+        CommandRegistrationCallback.EVENT.register((dispatcher, access, env) -> {
+            callback.register(dispatcher, env.dedicated);
+        });
     }
 }

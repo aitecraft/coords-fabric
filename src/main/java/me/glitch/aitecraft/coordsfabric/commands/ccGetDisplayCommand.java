@@ -38,7 +38,7 @@ public final class ccGetDisplayCommand {
     }
 
     private int executeCoordUUIDArg(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        ServerPlayerEntity commandSource = context.getSource().getPlayer();
+        ServerPlayerEntity commandSource = context.getSource().getPlayerOrThrow();
         UUID uuidArg = UuidArgumentType.getUuid(context, "Coord UUID");
 
         boolean found = false;

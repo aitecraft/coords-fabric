@@ -25,7 +25,7 @@ public final class ccDisplayClearCommand {
     }
 
     private int executeNoArgs(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        UUID playerUuid = context.getSource().getPlayer().getUuid();
+        UUID playerUuid = context.getSource().getPlayerOrThrow().getUuid();
         
         if (tasks.containsKey(playerUuid)) {
             tasks.get(playerUuid).cancel(false);

@@ -2,16 +2,13 @@ package me.glitch.aitecraft.coordsfabric.coord;
 
 import java.io.Serializable;
 import java.util.UUID;
-
-import net.minecraft.network.MessageType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.text.ClickEvent.Action;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 
 import me.glitch.aitecraft.coordsfabric.util.FabricDiscordHelper;
@@ -33,7 +30,7 @@ public class Coord implements Serializable
         this.xValue = player_pos.getX();
         this.yValue = player_pos.getY();
         this.zValue = player_pos.getZ();
-        this.saveName = player.getDisplayName().asString();
+        this.saveName = player.getDisplayName().getString();
         this.dimension = player.getWorld().getRegistryKey().getValue().toString();
     }
 
@@ -54,7 +51,7 @@ public class Coord implements Serializable
     }
 
     public void sendToSpecificPlayer(ServerPlayerEntity commandSource, ServerPlayerEntity targetPlayer) {
-        commandSource.sendSystemMessage(this.toText(), targetPlayer.getUuid());
+        commandSource.sendMessage(this.toText());
         
         // Inform targetPlayer
         MessageTargetPlayer(targetPlayer, commandSource);
@@ -64,7 +61,7 @@ public class Coord implements Serializable
     
     // Broadcast to chat
     public void broadcastToChat(ServerPlayerEntity commandSource) {
-        commandSource.getServer().getPlayerManager().broadcast(this.toText(), MessageType.CHAT, Util.NIL_UUID);
+        commandSource.getServer().getPlayerManager().broadcast(this.toText(), false);
         FabricDiscordHelper.sendMessage(this.toText());
     }
 
@@ -101,12 +98,12 @@ public class Coord implements Serializable
     }
 
     private MutableText createOptionText(String button, String description, String command, boolean suggest) {
-        MutableText optionText = new LiteralText("["+ button +"]");
+        MutableText optionText = Text.literal("["+ button +"]");
         optionText.setStyle(
             optionText.getStyle().withHoverEvent(
                 new HoverEvent(
                     HoverEvent.Action.SHOW_TEXT,
-                    new LiteralText(description)
+                    Text.of(description)
                 )
             ).withClickEvent(
                 new ClickEvent(
@@ -120,12 +117,12 @@ public class Coord implements Serializable
     }
 
     private MutableText createCopyCoordOptionText(String button, String desc) {
-        MutableText optionText = new LiteralText("["+ button +"]");
+        MutableText optionText = Text.literal("["+ button +"]");
         optionText.setStyle(
             optionText.getStyle().withHoverEvent(
                 new HoverEvent(
                     HoverEvent.Action.SHOW_TEXT,
-                    new LiteralText(desc)
+                    Text.of(desc)
                 )
             ).withClickEvent(
                 new ClickEvent(
@@ -146,7 +143,7 @@ public class Coord implements Serializable
         MutableText message = this.toText();
         message.append("\n");
 
-        MutableText options = new LiteralText("");
+        MutableText options = Text.literal("");
         options.append(createOptionText("GET", "Show in public chat", "/cc-get", false));
         options.append(" ");
         options.append(createOptionText("DEL", "Delete", "/cc-get-delete", false));
@@ -163,7 +160,7 @@ public class Coord implements Serializable
 
     public MutableText toText() {
         MutableText message = getTextSaveName();
-        message.append(new LiteralText(":").formatted(Formatting.WHITE));
+        message.append(Text.literal(":").formatted(Formatting.WHITE));
         message.append(getTextX("  ", ""));
         message.append(getTextY("  ", ""));
         message.append(getTextZ("  ", ""));
@@ -172,7 +169,7 @@ public class Coord implements Serializable
     }
 
     private MutableText getTextSaveName(String pre, String post) {
-        return new LiteralText(pre + this.saveName + post).formatted(Formatting.WHITE);
+        return Text.literal(pre + this.saveName + post).formatted(Formatting.WHITE);
     }
 
     private MutableText getTextSaveName() {
@@ -180,7 +177,7 @@ public class Coord implements Serializable
     }
 
     private MutableText getTextX(String pre, String post) {
-        return new LiteralText(pre + "X = " + this.xValue + post).formatted(Formatting.RED);
+        return Text.literal(pre + "X = " + this.xValue + post).formatted(Formatting.RED);
     }
 
     private MutableText getTextX() {
@@ -188,7 +185,7 @@ public class Coord implements Serializable
     }
 
     private MutableText getTextY(String pre, String post) {
-        return new LiteralText(pre + "Y = " + this.yValue + post).formatted(Formatting.GREEN);
+        return Text.literal(pre + "Y = " + this.yValue + post).formatted(Formatting.GREEN);
     }
 
     private MutableText getTextY() {
@@ -196,7 +193,7 @@ public class Coord implements Serializable
     }
 
     private MutableText getTextZ(String pre, String post) {
-        return new LiteralText(pre + "Z = " + this.zValue + post).formatted(Formatting.BLUE);
+        return Text.literal(pre + "Z = " + this.zValue + post).formatted(Formatting.BLUE);
     }
 
     private MutableText getTextZ() {
@@ -204,7 +201,7 @@ public class Coord implements Serializable
     }
 
     private MutableText getTextDimension(String pre, String post) {
-        return new LiteralText(pre + this.dimension + post).formatted(Formatting.WHITE);
+        return Text.literal(pre + this.dimension + post).formatted(Formatting.WHITE);
     }
 
     private MutableText getTextDimension() {
@@ -241,10 +238,10 @@ public class Coord implements Serializable
 
     // notify specific playerentity (static method)
     private static void MessageTargetPlayer(ServerPlayerEntity targetPlayer, ServerPlayerEntity commandSource) {
-        MutableText messageToTargetPlayer = (new LiteralText(commandSource.getDisplayName().asString())).formatted(Formatting.GRAY);
-        messageToTargetPlayer.append(new LiteralText(" has seen your coordinates.").formatted(Formatting.GRAY));
+        MutableText messageToTargetPlayer = commandSource.getDisplayName().copy().formatted(Formatting.GRAY);
+        messageToTargetPlayer.append(Text.literal(" has seen your coordinates.").formatted(Formatting.GRAY));
 
-        targetPlayer.sendSystemMessage(messageToTargetPlayer, commandSource.getUuid());
+        targetPlayer.sendMessage(messageToTargetPlayer);
     }
 
     public void rename(String newName) {

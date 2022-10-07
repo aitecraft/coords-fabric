@@ -30,7 +30,7 @@ public final class ccsCommand {
     }
 
     private int executeSaveNameArg(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        ServerPlayerEntity commandSource = context.getSource().getPlayer();
+        ServerPlayerEntity commandSource = context.getSource().getPlayerOrThrow();
         String saveName = StringArgumentType.getString(context, "Save Name");
 
         Coord playerCoord = new Coord(commandSource, saveName);
